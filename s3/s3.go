@@ -84,6 +84,26 @@ func NewS3FileWriter(
 	return file.Create(key)
 }
 
+// NewS3FileWriter creates an S3 FileWriter, to be used with NewParquetWriter
+func NewS3FileWriterWithClient(
+	ctx context.Context,
+	client s3iface.S3API,
+	bucket string,
+	key string,
+	uploaderOptions []func(*s3manager.Uploader),
+) (source.ParquetFile, error) {
+	file := &S3File{
+		ctx:             ctx,
+		client:          client,
+		writeDone:       make(chan error),
+		uploaderOptions: uploaderOptions,
+		BucketName:      bucket,
+		Key:             key,
+	}
+
+	return file.Create(key)
+}
+
 // NewS3FileReader creates an S3 FileReader, to be used with NewParquetReader
 func NewS3FileReader(ctx context.Context, bucket string, key string, cfgs ...*aws.Config) (source.ParquetFile, error) {
 	if activeS3Session == nil {
@@ -100,6 +120,21 @@ func NewS3FileReader(ctx context.Context, bucket string, key string, cfgs ...*aw
 	file := &S3File{
 		ctx:        ctx,
 		client:     s3Client,
+		downloader: s3Downloader,
+		BucketName: bucket,
+		Key:        key,
+	}
+
+	return file.Open(key)
+}
+
+// NewS3FileReader creates an S3 FileReader, to be used with NewParquetReader
+func NewS3FileReaderWithClient(ctx context.Context, client s3iface.S3API, bucket string, key string) (source.ParquetFile, error) {
+	s3Downloader := s3manager.NewDownloaderWithClient(client)
+
+	file := &S3File{
+		ctx:        ctx,
+		client:     client,
 		downloader: s3Downloader,
 		BucketName: bucket,
 		Key:        key,
