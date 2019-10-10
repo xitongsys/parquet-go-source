@@ -47,7 +47,7 @@
 
 [[constraint]]
   name = "github.com/wandb/parquet-go"
-  version = "1.3.0"
+  revision = "533209a8570f4355427f4c6c724de7fe827b86d5"
 
 [prune]
   go-tests = true
