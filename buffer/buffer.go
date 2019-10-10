@@ -3,7 +3,7 @@ package buffer
 import (
 	"bytes"
 
-	"github.com/xitongsys/parquet-go/source"
+	"github.com/wandb/parquet-go/source"
 )
 
 // BufferFile allows reading parquet messages from a memory buffer.

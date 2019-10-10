@@ -3,7 +3,7 @@ package local
 import (
 	"os"
 
-	"github.com/xitongsys/parquet-go/source"
+	"github.com/wandb/parquet-go/source"
 )
 
 type LocalFile struct {

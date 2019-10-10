@@ -3,7 +3,7 @@ package writerfile
 import (
 	"io"
 
-	"github.com/xitongsys/parquet-go/source"
+	"github.com/wandb/parquet-go/source"
 )
 
 type WriterFile struct {

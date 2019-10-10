@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/xitongsys/parquet-go-source/writerfile"
-	"github.com/xitongsys/parquet-go/writer"
-	"github.com/xitongsys/parquet-go/parquet"
+	"github.com/wandb/parquet-go-source/writerfile"
+	"github.com/wandb/parquet-go/writer"
+	"github.com/wandb/parquet-go/parquet"
 )
 
 type Student struct {

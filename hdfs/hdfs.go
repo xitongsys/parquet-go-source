@@ -2,7 +2,7 @@ package hdfs
 
 import (
 	"github.com/colinmarc/hdfs"
-	"github.com/xitongsys/parquet-go/source"
+	"github.com/wandb/parquet-go/source"
 )
 
 type HdfsFile struct {

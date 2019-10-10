@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"cloud.google.com/go/storage"
-	"github.com/xitongsys/parquet-go/source"
+	"github.com/wandb/parquet-go/source"
 )
 
 type GcsFile struct {

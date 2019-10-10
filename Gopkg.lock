@@ -151,7 +151,7 @@
 
 [[projects]]
   digest = "1:42d0933eab5ea49007aaf2d94608cadc4fe3f29f23a189aab2f41c1fa7a84d78"
-  name = "github.com/xitongsys/parquet-go"
+  name = "github.com/wandb/parquet-go"
   packages = [
     "common",
     "compress",
@@ -365,10 +365,10 @@
     "github.com/colinmarc/hdfs",
     "github.com/golang/mock/gomock",
     "github.com/spf13/afero",
-    "github.com/xitongsys/parquet-go/parquet",
-    "github.com/xitongsys/parquet-go/reader",
-    "github.com/xitongsys/parquet-go/source",
-    "github.com/xitongsys/parquet-go/writer",
+    "github.com/wandb/parquet-go/parquet",
+    "github.com/wandb/parquet-go/reader",
+    "github.com/wandb/parquet-go/source",
+    "github.com/wandb/parquet-go/writer",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
