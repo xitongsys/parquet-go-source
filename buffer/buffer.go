@@ -22,14 +22,14 @@ func NewBufferFile(b []byte) (BufferFile, error) {
 	}, nil
 }
 
-func (bf BufferFile) Create(name string) (BufferFile, error) {
+func (bf BufferFile) Create(name string) (source.ParquetFile, error) {
 	return BufferFile{
 		Reader: bytes.NewReader(make([]byte, 0)),
 		Writer: bytes.NewBuffer(make([]byte, 0)),
 	}, nil
 }
 
-func (bf BufferFile) Open(name string) (BufferFile, error) {
+func (bf BufferFile) Open(name string) (source.ParquetFile, error) {
 	return BufferFile{
 		Reader: bytes.NewReader(bf.buff),
 		Writer: bytes.NewBuffer(bf.buff),
