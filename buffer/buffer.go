@@ -16,6 +16,8 @@ type BufferFile struct {
 // DefaultCapacity is the size in bytes of a new BufferFile's backing buffer
 const DefaultCapacity = 512
 
+var errSeekToNegativeLocation = errors.New("unable to seek to a location <0")
+
 // NewBufferFile creates new in memory parquet buffer.
 func NewBufferFile() *BufferFile {
 	return NewBufferFileCapacity(DefaultCapacity)
@@ -54,7 +56,7 @@ func (bf *BufferFile) Seek(offset int64, whence int) (int64, error) {
 	}
 
 	if newLoc < 0 {
-		return int64(bf.loc), errors.New("unable to seek to a location <0")
+		return int64(bf.loc), errSeekToNegativeLocation
 	}
 
 	if newLoc > len(bf.buff) {
@@ -71,7 +73,8 @@ func (bf *BufferFile) Read(p []byte) (n int, err error) {
 	n = copy(p, bf.buff[bf.loc:len(bf.buff)])
 	bf.loc += n
 
-	if bf.loc == len(bf.buff) {
+	// if copied files into buffer with not enaugh capacity
+	if bf.loc < len(bf.buff) {
 		return n, io.EOF
 	}
 
@@ -110,6 +113,7 @@ func (bf BufferFile) Close() error {
 	return nil
 }
 
+// Bytes returns the byte slice representing the buffer file.
 func (bf BufferFile) Bytes() []byte {
 	return bf.buff
 }
