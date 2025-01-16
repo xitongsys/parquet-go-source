@@ -170,10 +170,9 @@ func (s *MinioFile) Create(key string) (source.ParquetFile, error) {
 		Key:        key,
 	}
 	pr, pw := io.Pipe()
-	_, err := s.client.PutObject(s.ctx, s.BucketName, s.Key, pr, -1, minio.PutObjectOptions{})
-	if err != nil {
-		return pf, err
-	}
+	go func() {
+		s.client.PutObject(s.ctx, s.BucketName, s.Key, pr, -1, minio.PutObjectOptions{})
+	}()
 	pf.pipeReader = pr
 	pf.pipeWriter = pw
 	return pf, nil
