@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"io"
+	"sync"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/xitongsys/parquet-go/source"
@@ -27,6 +28,8 @@ type MinioFile struct {
 	err        error
 	BucketName string
 	Key        string
+
+	wg sync.WaitGroup // WaitGroup to manage the goroutine lifecycle
 }
 
 var (
@@ -128,11 +131,15 @@ func (s *MinioFile) Write(p []byte) (n int, err error) {
 func (s *MinioFile) Close() error {
 	var err error
 
+	// Close the pipe writer
 	if s.pipeWriter != nil {
 		if err = s.pipeWriter.Close(); err != nil {
 			return err
 		}
 	}
+
+	// Wait for the goroutine to complete
+	s.wg.Wait()
 
 	return err
 }
@@ -170,11 +177,15 @@ func (s *MinioFile) Create(key string) (source.ParquetFile, error) {
 		Key:        key,
 	}
 	pr, pw := io.Pipe()
-	_, err := s.client.PutObject(s.ctx, s.BucketName, s.Key, pr, -1, minio.PutObjectOptions{})
-	if err != nil {
-		return pf, err
-	}
 	pf.pipeReader = pr
 	pf.pipeWriter = pw
+
+	// Increment WaitGroup counter before starting the goroutine
+	pf.wg.Add(1)
+
+	go func() {
+		defer pf.wg.Done() // Decrement counter when goroutine finishes
+		s.client.PutObject(s.ctx, s.BucketName, s.Key, pr, -1, minio.PutObjectOptions{})
+	}()
 	return pf, nil
 }
